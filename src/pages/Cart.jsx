@@ -23,14 +23,14 @@ const Cart = () => {
         </div>
       ) : (
         <div className="mt-16">
-          <div className="flex flex-col md:flex-row justify-between mt-[64px] gap-4 min-h-[calc(100vh-64px)] dark:bg-slate-800 py-5 px-12">
+          <div className="flex flex-col md:flex-row justify-between mt-[64px] gap-4 min-h-[calc(100vh-64px)] dark:bg-slate-800 py-5 px-2 sm:px-12">
             <div className="flex-[2] flex flex-col gap-2 mb-3">
               {cartItems?.map((product) => (
                 <CartProduct key={product.id} product={product} />
               ))}
             </div>
             {/* Right  */}
-            <div className="flex-1 text-center border border-gray-400 py-3 h-[200px] sticky">
+            <div className="flex-1 flex flex-col items-center justify-center text-center border border-gray-400 py-3 h-[200px] sticky">
               <p className="text-xl dark:text-green-500">Total Items:</p>
               <p className="text-2xl font-bold dark:text-green-400">{itemCount}</p>
               <p className="text-xl dark:text-green-500">Total Payment:</p>

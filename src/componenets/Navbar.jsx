@@ -1,11 +1,12 @@
 import { Link, useLocation } from "react-router-dom";
 import { FiShoppingCart, FiMenu, FiX } from "react-icons/fi";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { CartContext } from "../context/cart/CartContext";
 import Search from "./Search";
 import { DarkModeSwitch } from "react-toggle-dark-mode";
 
 const Navbar = () => {
+  const ref = useRef();
   const [isDarkMode, setDarkMode] = useState(false);
   const { cartItems, setTheme, theme } = useContext(CartContext);
 
@@ -18,8 +19,29 @@ const Navbar = () => {
     theme === "light" ? setTheme("dark") : setTheme("light");
   };
 
+  useEffect(() => {
+    setToggle(false);
+  }, [location]);
+
+  // hide menu dropdown on outside click
+  useEffect(() => {
+    const checkIfClickedOutside = (e) => {
+      // If the menu is open and the clicked target is not within the menu,
+      // then close the menu
+      if (toggle && ref.current && !ref.current.contains(e.target)) {
+        setToggle(false);
+      }
+    };
+    document.addEventListener("mousedown", checkIfClickedOutside);
+
+    return () => {
+      // Cleanup the event listener
+      document.removeEventListener("mousedown", checkIfClickedOutside);
+    };
+  },[toggle]);
+
   return (
-    <nav className="h-16 bg-gray-200 dark:bg-slate-900 px-12 flex items-center justify-between fixed top-0 left-0 w-[100%] z-50 ">
+    <nav className="h-16 bg-gray-200 dark:bg-slate-900 px-4 sm:px-12 flex items-center justify-between fixed top-0 left-0 w-[100%] z-50 ">
       <h2 className="text-2xl dark:text-white font-extrabold">
         <Link to="/">FASHION.</Link>
       </h2>
@@ -71,7 +93,7 @@ const Navbar = () => {
         />
       </div>
       {toggle && (
-        <div className="absolute top-[4rem] w-[100%] left-0 z-50 bg-gray-400 px-12 py-2 text-xl dark:bg-slate-800 dark:shadow-xl">
+        <div ref={ref} className="absolute top-[4rem] w-[100%] left-0 z-50 bg-gray-400 px-4 sm:px-12 py-2 text-xl dark:bg-slate-800 dark:shadow-xl">
           <ul className="flex flex-col gap-4">
             <li className="dark:text-green-400">
               <Link to="/">Store</Link>
@@ -91,7 +113,7 @@ const Navbar = () => {
             </li>
 
             <div className="h-[1px] w-[100%] bg-gray-300"></div>
-            <li>
+            <li onClick={() => setToggle(false)}>
               <DarkModeSwitch
                 className="dark:text-green-500"
                 checked={isDarkMode}
